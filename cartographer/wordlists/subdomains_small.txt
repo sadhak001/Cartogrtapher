@@ -1,0 +1,32 @@
+# one subdomain prefix per line - swap this file for a bigger list
+# (e.g. SecLists' subdomains-top1million-5000.txt) as you grow
+www
+mail
+ftp
+dev
+staging
+test
+api
+admin
+portal
+vpn
+remote
+webmail
+ns1
+ns2
+smtp
+blog
+shop
+m
+mobile
+app
+cdn
+static
+support
+docs
+git
+jenkins
+demo
+beta
+internal
+dashboard
