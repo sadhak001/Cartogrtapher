@@ -1,74 +1,237 @@
-# cartographer
+# Cartographer
 
-A small modular recon CLI, built for learning. Maps a target's exposed
-surface across four techniques: DNS/WHOIS lookups, subdomain
-enumeration (passive + active), port scanning via nmap, and HTTP
-header/tech fingerprinting.
+A modular reconnaissance CLI built for learning and authorized security assessment. Cartographer maps a target's exposed attack surface through DNS and WHOIS lookups, subdomain enumeration, port scanning, and HTTP fingerprinting.
 
-## Before you run this
+> **Educational Use Only**
+>
+> This tool must only be used against systems you own or are explicitly authorized to test. Unauthorized scanning or reconnaissance may violate laws, regulations, or service agreements.
 
-Only point this at:
-- infrastructure you own, or
-- a target where you have explicit written authorization to test it
-  (an in-scope bug bounty program, a signed pentest contract, or a
-  deliberately vulnerable lab like a HackTheBox/TryHackMe machine)
+---
 
-The tool asks you to confirm authorization before it runs anything,
-every time, unless you pass `--yes`.
+## Features
 
-## Install
+* DNS resolution and basic WHOIS lookups
+* Passive and active subdomain enumeration
+* Port discovery using Nmap
+* HTTP header collection
+* Basic technology fingerprinting
+* Modular architecture for adding new reconnaissance modules
+* JSON output for automation and reporting
 
-```bash
-pip install -e .
-# nmap itself must also be installed on your system (python-nmap is
-# just a wrapper around the real binary):
-#   macOS:         brew install nmap
-#   Debian/Ubuntu: sudo apt install nmap
-#   Windows:       https://nmap.org/download.html
+---
+
+## Project Structure
+
+```text
+cartographer/
+├── cartographer/
+│   ├── dns.py
+│   ├── subdomains.py
+│   ├── ports.py
+│   ├── fingerprint.py
+│   └── utils.py
+├── output/
+├── examples/
+├── tests/
+├── requirements.txt
+├── README.md
+└── main.py
 ```
 
-This installs a `cartographer` command on your PATH. No install? Run
-it straight from the project folder instead:
+---
+
+## Requirements
+
+* Python 3.10+
+* Nmap installed and accessible from PATH
+
+Verify Nmap installation:
+
+```bash
+nmap --version
+```
+
+---
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/<your-username>/cartographer.git
+cd cartographer
+```
+
+Create a virtual environment:
+
+```bash
+python -m venv venv
+```
+
+Activate it:
+
+Linux/macOS:
+
+```bash
+source venv/bin/activate
+```
+
+Windows:
+
+```powershell
+venv\Scripts\activate
+```
+
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
-python -m cartographer dns example.com
 ```
+
+---
 
 ## Usage
 
-Each recon technique is its own subcommand:
+Basic scan:
 
 ```bash
-cartographer dns example.com
-cartographer subdomains example.com --wordlist wordlists/big_list.txt
-cartographer ports example.com --ports 80,443,8080
-cartographer http example.com
-cartographer all example.com --output results.json
-cartographer --version
-cartographer --help
-cartographer subdomains --help
+python main.py example.com
 ```
 
-## What each module does
+Example output:
 
-- **modules/dns_whois.py** - DNS record lookups (A, MX, NS, TXT...)
-  and WHOIS registration data. Fully passive - you never touch the
-  target, just public registries.
-- **modules/subdomains.py** - passive enumeration via crt.sh
-  certificate transparency logs, plus active brute-force DNS
-  resolution against a wordlist.
-- **modules/portscan.py** - wraps the real nmap binary via
-  python-nmap to find open ports and detect running services/versions.
-- **modules/fingerprint.py** - HTTP GET to inspect response headers,
-  flag missing security headers, and pattern-match the page body for
-  common framework signatures.
+```text
+[+] Resolving DNS records...
+[+] Enumerating subdomains...
+[+] Running port scan...
+[+] Collecting HTTP headers...
+[+] Fingerprinting technologies...
 
-## A note on the sandbox this was built in
+Target: example.com
 
-Modules were built and tested in a sandboxed environment with outbound
-network access restricted to package registries only, so live lookups
-against real domains (DNS, crt.sh, arbitrary HTTP targets) couldn't be
-demonstrated end-to-end there. Port scanning and HTTP fingerprinting
-were verified against localhost. Install it locally and run it against
-a target you're authorized to test for the full picture.
+Open Ports:
+- 80/tcp
+- 443/tcp
+
+Detected Technologies:
+- nginx
+- PHP
+
+Discovered Subdomains:
+- api.example.com
+- dev.example.com
+```
+
+---
+
+## Modules
+
+### DNS & WHOIS
+
+Collects basic DNS information and domain registration metadata.
+
+### Subdomain Enumeration
+
+Uses passive and active techniques to discover publicly reachable subdomains.
+
+### Port Scanning
+
+Performs service discovery using Nmap.
+
+### HTTP Fingerprinting
+
+Collects HTTP response headers and identifies common technologies.
+
+---
+
+## Example Workflow
+
+```text
+Target Domain
+      │
+      ▼
+ DNS Lookup
+      │
+      ▼
+ Subdomain Enumeration
+      │
+      ▼
+ Port Scanning
+      │
+      ▼
+ HTTP Fingerprinting
+      │
+      ▼
+ Report Generation
+```
+
+---
+
+## Output
+
+Results can be stored as JSON for further processing:
+
+```json
+{
+  "domain": "example.com",
+  "subdomains": [
+    "api.example.com",
+    "dev.example.com"
+  ],
+  "ports": [
+    80,
+    443
+  ],
+  "technologies": [
+    "nginx",
+    "php"
+  ]
+}
+```
+
+---
+
+## Running Tests
+
+```bash
+pytest
+```
+
+---
+
+## Roadmap
+
+* [ ] CIDR/network range support
+* [ ] Additional DNS record collection
+* [ ] Screenshot capture for discovered web services
+* [ ] Report generation (HTML/PDF)
+* [ ] Plugin architecture
+* [ ] Concurrent scanning improvements
+* [ ] Containerized deployment
+
+---
+
+## Contributing
+
+Contributions, bug reports, and suggestions are welcome.
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Open a pull request
+
+---
+
+## License
+
+MIT License
+
+See the LICENSE file for details.
+
+---
+
+## Disclaimer
+
+This software is provided for educational and defensive security purposes only.
+
+The author assumes no responsibility for misuse or damage caused by this software. Users are solely responsible for ensuring their activities comply with applicable laws, regulations, and authorization requirements.

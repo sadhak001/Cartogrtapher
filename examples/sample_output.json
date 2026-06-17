@@ -1,0 +1,15 @@
+{
+"domain": "example.com",
+"subdomains": [
+"api.example.com",
+"dev.example.com"
+],
+"open_ports": [
+80,
+443
+],
+"technologies": [
+"nginx",
+"php"
+]
+}
