@@ -58,7 +58,7 @@ nmap --version
 Clone the repository:
 
 ```bash
-git clone https://github.com/<your-username>/cartographer.git
+git clone https://github.com/sadhak001/cartographer.git
 cd cartographer
 ```
 
