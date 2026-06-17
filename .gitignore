@@ -1,9 +1,12 @@
 # Python
 
-**pycache**/
+__pycache__/
 *.py[cod]
-*$py.class
-
+.venv/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
 # Virtual environments
 
 venv/
@@ -34,7 +37,6 @@ Thumbs.db
 
 # Output files
 
-output/
 reports/
 
 # Environment variables
